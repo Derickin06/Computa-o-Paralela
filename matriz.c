@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 /*               OBSERVAÇÕES
@@ -69,7 +70,7 @@ Inicialização determinística para matrizes quadradas N x N
 
 
 
-int main() {
+int main(void) {
     
 //Iniciando matrizes
 
@@ -93,6 +94,11 @@ int main() {
     }
     */
 
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+
+//varredura linha
+    /*
    long pares = 0;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -101,8 +107,10 @@ int main() {
             }
         }
     }
+    */
     //printf("%ld \n", pares);
-
+//varredura coluna
+    
     long pares2 = 0;
     for (int j = 0; j < N; j++) {
         for (int i = 0; i < N; i++) {
@@ -111,13 +119,15 @@ int main() {
             }
         }
     }
-    printf("%ld \n", pares2);
+   // printf("%ld \n", pares2);
 
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
+    long long elapsed =
+        (end.tv_sec - start.tv_sec) * 1000000000LL +
+        (end.tv_nsec - start.tv_nsec);
 
-
-
-
+    printf("Tempo: %lld ns\n", elapsed);
 
 
 
