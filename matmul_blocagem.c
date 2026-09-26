@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+// para compilar: gcc -O3 -Wall matmul_blocagem.c -o matmul_blocagem_O3
+//para executar: valgrind --tool=cachegrind --cache-sim=yes ./matmul_blocagem_O3 512 64
 int main(void) {
 
     //Iniciando matrizes
@@ -24,8 +25,8 @@ int main(void) {
 
 
     // time inicializado
-    struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+   // struct timespec start, end;
+   // clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
     for (int ii = 0; ii < N; ii += Bl) {
         for (int jj = 0; jj < N; jj += Bl) {
@@ -45,13 +46,13 @@ int main(void) {
     }
 
 
-     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+    /* clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
     long long elapsed =
         (end.tv_sec - start.tv_sec) * 1000000000LL +
         (end.tv_nsec - start.tv_nsec);
     printf("Tempo: %lld ns\n", elapsed);
-
+    */
 
     return 0;
 }
