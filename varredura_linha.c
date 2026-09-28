@@ -4,11 +4,11 @@
 
 
 
-int main(void) {
+int main(int arg) {
 
     //Iniciando matrizes
 
-    int N = 1024;
+    int N = arg;
 
     double* A = malloc(N * N * sizeof(double));
     double* B = malloc(N * N * sizeof(double));

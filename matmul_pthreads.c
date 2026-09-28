@@ -18,9 +18,9 @@ typedef struct {
 void* mul_padrao(void* arg){
     dados_thread* dados = (dados_thread*)arg;
 
-    printf("Thread iniciou: %d - %d \n", 
-    dados->inicio, 
-    dados->fim);
+    //printf("Thread iniciou: %d - %d \n", 
+    //dados->inicio, 
+    //dados->fim);
 
 
     for(int i = dados->inicio; i <= dados->fim; i++){
@@ -35,9 +35,9 @@ void* mul_padrao(void* arg){
         }
     }
     
-    printf("Thread terminou: %d - %d\n",
-       dados->inicio,
-       dados->fim);
+    //printf("Thread terminou: %d - %d\n",
+    //   dados->inicio,
+     //  dados->fim);
 
     return NULL;
 
@@ -74,6 +74,9 @@ int main(int argc, char* argv[]){
 
     int intervalo = N / thread_count;
 
+ // time inicializado
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
     for(int i=0; i < thread_count; i++) {
         dados[i].inicio = i * intervalo;
@@ -85,10 +88,7 @@ int main(int argc, char* argv[]){
         dados[i].A = A; 
         dados[i].B = B;
         dados[i].C = C;
-        printf("Criando thread: %d: intervalo %d - %d \n",
-            i,
-            dados[i].inicio,
-            dados[i].fim);
+    
         // thread criada
         pthread_create(&thread_handles[i], NULL, mul_padrao, &dados[i]);
     }
@@ -96,6 +96,16 @@ int main(int argc, char* argv[]){
     for (int i = 0; i < thread_count; i++) {
         pthread_join(thread_handles[i], NULL);
     }
+
+      clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+
+    long long elapsed =
+        (end.tv_sec - start.tv_sec) * 1000000000LL +
+        (end.tv_nsec - start.tv_nsec);
+
+    printf("Tempo: %lld ns\n", elapsed);
+
+
 
     //print_matriz(C,N);
 

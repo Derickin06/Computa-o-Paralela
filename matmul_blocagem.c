@@ -3,11 +3,11 @@
 #include <time.h>
 // para compilar: gcc -O3 -Wall matmul_blocagem.c -o matmul_blocagem_O3
 //para executar: valgrind --tool=cachegrind --cache-sim=yes ./matmul_blocagem_O3 512 64
-int main(void) {
+int main(){
 
     //Iniciando matrizes
 
-    int N = 1024;
+    int N = 1536;
 
     double* A = malloc(N * N * sizeof(double));
     double* B = malloc(N * N * sizeof(double));
@@ -21,7 +21,7 @@ int main(void) {
     // iniciando matriz resultante C:
     double* C = malloc(N * N * sizeof(double));
     //escolhendo tamanho de bloco em cache (Bl):
-    long Bl = 3*(N* N * sizeof(double));
+    long Bl = 32;
 
 
     // time inicializado

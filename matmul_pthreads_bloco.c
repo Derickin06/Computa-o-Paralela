@@ -30,9 +30,7 @@ void* mul_padrao(void* arg) {
     int N = dados->N;
     int bloco = dados->bloco;
 
-    printf("Thread iniciou: %d - %d\n",
-           inicio,
-           fim);
+
 
     /*
      * ii -> blocos das linhas
@@ -83,10 +81,6 @@ void* mul_padrao(void* arg) {
         }
     }
 
-    printf("Thread terminou: %d - %d\n",
-           inicio,
-           fim);
-
     return NULL;
 }
 
@@ -108,9 +102,7 @@ void print_matriz(double *matriz, int N) {
 int main(int argc, char* argv[]) {
 
     if (argc < 3) {
-
-        printf("Uso: %s <N> <numero_threads>\n", argv[0]);
-
+       // printf("Uso: %s <N> <numero_threads>\n", argv[0]);
         return 1;
     }
 
@@ -124,7 +116,7 @@ int main(int argc, char* argv[]) {
 
     if (N <= 0 || thread_count <= 0) {
 
-        printf("N e numero de threads devem ser maiores que zero.\n");
+       // printf("N e numero de threads devem ser maiores que zero.\n");
 
         return 1;
     }
@@ -177,10 +169,10 @@ int main(int argc, char* argv[]) {
     }
 
 
-    printf("N = %d\n", N);
-    printf("Threads = %d\n", thread_count);
-    printf("Bl = %ld bytes\n", Bl);
-    printf("Tamanho do bloco = %d\n\n", bloco);
+    //printf("N = %d\n", N);
+    //printf("Threads = %d\n", thread_count);
+    //printf("Bl = %ld bytes\n", Bl);
+    //printf("Tamanho do bloco = %d\n\n", bloco);
 
 
     /*
@@ -240,41 +232,25 @@ int main(int argc, char* argv[]) {
      */
     int intervalo = N / thread_count;
 
+    // time inicializado
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
     for (int i = 0; i < thread_count; i++) {
-
-        dados[i].inicio = i * intervalo;
-
-
+        dados[i].inicio = i * intervalo;  
         if (i == thread_count - 1) {
-
             dados[i].fim = N;
 
         } else {
-
             dados[i].fim =
                 (i + 1) * intervalo;
         }
 
-
         dados[i].N = N;
-
         dados[i].bloco = bloco;
-
         dados[i].A = A;
-
         dados[i].B = B;
-
         dados[i].C = C;
-
-
-        printf(
-            "Criando thread %d: intervalo %d - %d\n",
-            i,
-            dados[i].inicio,
-            dados[i].fim
-        );
-
 
         int resultado = pthread_create(
             &thread_handles[i],
@@ -282,16 +258,12 @@ int main(int argc, char* argv[]) {
             mul_padrao,
             &dados[i]
         );
-
-
         if (resultado != 0) {
-
             printf(
                 "Erro ao criar thread %d.\n",
                 i
             );
-
-            free(A);
+         free(A);
             free(B);
             free(C);
             free(thread_handles);
@@ -299,34 +271,24 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
-
-
     /*
      * Espera todas as threads terminarem
      */
     for (int i = 0; i < thread_count; i++) {
-
         pthread_join(
             thread_handles[i],
             NULL
         );
     }
 
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
-    /*
-     * Descomente para visualizar C
-     */
+    long long elapsed =
+        (end.tv_sec - start.tv_sec) * 1000000000LL +
+        (end.tv_nsec - start.tv_nsec);
+
+    printf("Tempo: %lld ns\n", elapsed);
+
     // print_matriz(C, N);
-
-
-    /*
-     * Liberação da memória
-     */
-    free(A);
-    free(B);
-    free(C);
-    free(thread_handles);
-
-
     return 0;
 }
